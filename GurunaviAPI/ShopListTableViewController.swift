@@ -7,46 +7,95 @@
 //
 
 import UIKit
+import Alamofire
+import SwiftyJSON
+import SDWebImage
 
-class ShopListTableViewController: UITableViewController {
+class ShopListTableViewController: UITableViewController, UITextFieldDelegate {
 
+    @IBOutlet weak var textField: UITextField!
+    var rests: [Restaurant] = []
     override func viewDidLoad() {
         super.viewDidLoad()
+        getData()
+        
+        textField.delegate = self
+        tableView.register(UINib(nibName: "RestaurantCell", bundle: nil), forCellReuseIdentifier: "RestaurantCell")
 
-        // Uncomment the following line to preserve selection between presentations
-        // self.clearsSelectionOnViewWillAppear = false
-
-        // Uncomment the following line to display an Edit button in the navigation bar for this view controller.
-        // self.navigationItem.rightBarButtonItem = self.editButtonItem
     }
-
+    
+    func getData() {
+        let params: [String: String] = [
+            "keyid": "f03837e2efeaf7fff867adf9afcc3851",
+            "format": "json",
+            "name": "スターバックス"
+        ]
+        let url = "https://api.gnavi.co.jp/RestSearchAPI/20150630/"
+        Alamofire.request(url, method: .get, parameters: params, encoding: URLEncoding.default)
+            .responseJSON { (response) -> Void in
+                if let object = response.result.value {
+                    let jsonObject = JSON(object)
+                    let restJson = jsonObject["rest"].array
+                    self.rests = []
+                    for rest in restJson! {
+                        let restaurant = Restaurant()
+                        restaurant.name = rest["name"].string
+                        restaurant.url = rest["url"].string
+                        restaurant.imageURL = rest["image_url"]["shop_image1"].string
+                        self.rests.append(restaurant)
+                    }
+                    self.tableView.reloadData()
+                }
+        }
+    }
+    
     override func didReceiveMemoryWarning() {
         super.didReceiveMemoryWarning()
-        // Dispose of any resources that can be recreated.
+        
     }
 
     // MARK: - Table view data source
 
     override func numberOfSections(in tableView: UITableView) -> Int {
-        // #warning Incomplete implementation, return the number of sections
-        return 0
+        return 1
     }
+    
 
     override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        // #warning Incomplete implementation, return the number of rows
-        return 0
+        return self.rests.count
     }
 
-    /*
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        let cell = tableView.dequeueReusableCell(withIdentifier: "reuseIdentifier", for: indexPath)
-
-        // Configure the cell...
+        let cell = tableView.dequeueReusableCell(withIdentifier: "RestaurantCell", for: indexPath) as! RestaurantCell
+        let restaurant = self.rests[indexPath.row]
+        cell.nameLabel.text = restaurant.name
+        
+        let imageString = restaurant.imageURL
+        if let unwrappedImageString = imageString {
+            let myURL = URL(string: unwrappedImageString)
+            cell.restaurantImageView.sd_setImage(with: myURL)
+        } else {
+            cell.restaurantImageView.image = UIImage(named: "default_image.png")
+        }
 
         return cell
     }
-    */
+    
+    override func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
+        return 86
+    }
 
+    @IBAction func tapSearchButton(_ sender: UIBarButtonItem) {
+        textField.text = ""
+        textField.resignFirstResponder()
+    }
+    
+    
+    func textFieldShouldReturn(_ textField: UITextField) -> Bool {
+        textField.resignFirstResponder()
+        return true
+    }
+    
     /*
     // Override to support conditional editing of the table view.
     override func tableView(_ tableView: UITableView, canEditRowAt indexPath: IndexPath) -> Bool {
