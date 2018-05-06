@@ -7,29 +7,28 @@
 //
 
 import UIKit
+import WebKit
 
 class WebViewController: UIViewController {
+    
+    var selectedRest: Restaurant?
 
     override func viewDidLoad() {
         super.viewDidLoad()
-
-        // Do any additional setup after loading the view.
+        
+        let myWebView = WKWebView()
+        myWebView.frame = self.view.frame
+        self.view.addSubview(myWebView)
+        
+        let url = self.selectedRest!.url!
+        let myURL = NSURL(string: url)
+        let myURLReq = NSURLRequest(url: myURL! as URL)
+        myWebView.load(myURLReq as URLRequest)
     }
 
     override func didReceiveMemoryWarning() {
         super.didReceiveMemoryWarning()
         // Dispose of any resources that can be recreated.
     }
-    
-
-    /*
-    // MARK: - Navigation
-
-    // In a storyboard-based application, you will often want to do a little preparation before navigation
-    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
-        // Get the new view controller using segue.destinationViewController.
-        // Pass the selected object to the new view controller.
-    }
-    */
 
 }

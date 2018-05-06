@@ -73,7 +73,7 @@
                     </navigationItem>
                     <connections>
                         <outlet property="textField" destination="ht4-p4-CE0" id="XSU-SF-jvh"/>
-                        <segue destination="1Nw-8m-rpT" kind="show" id="SPd-Bq-dqc"/>
+                        <segue destination="1Nw-8m-rpT" kind="show" identifier="ShowWebViewController" id="SPd-Bq-dqc"/>
                     </connections>
                 </tableViewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="bCZ-eB-hty" userLabel="First Responder" sceneMemberID="firstResponder"/>

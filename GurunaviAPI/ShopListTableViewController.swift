@@ -16,6 +16,8 @@ class ShopListTableViewController: UITableViewController, UITextFieldDelegate {
     @IBOutlet weak var textField: UITextField!
     
     var rests: [Restaurant] = []
+    var selectedRest: Restaurant?
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         getData()
@@ -67,6 +69,15 @@ class ShopListTableViewController: UITableViewController, UITextFieldDelegate {
         return 86
     }
     
+    override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+        self.selectedRest = self.rests[indexPath.row]
+        self.performSegue(withIdentifier: "ShowWebViewController", sender: nil)
+    }
+    
+    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
+        let webViewController = segue.destination as! WebViewController
+        webViewController.selectedRest = self.selectedRest
+    }
     
     func textFieldShouldReturn(_ textField: UITextField) -> Bool {
         textField.resignFirstResponder()
