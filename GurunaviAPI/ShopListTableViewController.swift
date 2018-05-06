@@ -14,6 +14,7 @@ import SDWebImage
 class ShopListTableViewController: UITableViewController, UITextFieldDelegate {
 
     @IBOutlet weak var textField: UITextField!
+    
     var rests: [Restaurant] = []
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -24,29 +25,10 @@ class ShopListTableViewController: UITableViewController, UITextFieldDelegate {
 
     }
     
-    func getData() {
-        let params: [String: String] = [
-            "keyid": "f03837e2efeaf7fff867adf9afcc3851",
-            "format": "json",
-            "name": "スターバックス"
-        ]
-        let url = "https://api.gnavi.co.jp/RestSearchAPI/20150630/"
-        Alamofire.request(url, method: .get, parameters: params, encoding: URLEncoding.default)
-            .responseJSON { (response) -> Void in
-                if let object = response.result.value {
-                    let jsonObject = JSON(object)
-                    let restJson = jsonObject["rest"].array
-                    self.rests = []
-                    for rest in restJson! {
-                        let restaurant = Restaurant()
-                        restaurant.name = rest["name"].string
-                        restaurant.url = rest["url"].string
-                        restaurant.imageURL = rest["image_url"]["shop_image1"].string
-                        self.rests.append(restaurant)
-                    }
-                    self.tableView.reloadData()
-                }
-        }
+    @IBAction func tapSearchButton(_ sender: UIButton) {
+        getData()
+        textField.text = ""
+        textField.resignFirstResponder()
     }
     
     override func didReceiveMemoryWarning() {
@@ -84,16 +66,36 @@ class ShopListTableViewController: UITableViewController, UITextFieldDelegate {
     override func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
         return 86
     }
-
-    @IBAction func tapSearchButton(_ sender: UIBarButtonItem) {
-        textField.text = ""
-        textField.resignFirstResponder()
-    }
     
     
     func textFieldShouldReturn(_ textField: UITextField) -> Bool {
         textField.resignFirstResponder()
         return true
+    }
+    
+    func getData() {
+        let params: [String: String] = [
+            "keyid": "f03837e2efeaf7fff867adf9afcc3851",
+            "format": "json",
+            "name": textField.text!
+        ]
+        let url = "https://api.gnavi.co.jp/RestSearchAPI/20150630/"
+        Alamofire.request(url, method: .get, parameters: params, encoding: URLEncoding.default)
+            .responseJSON { (response) -> Void in
+                if let object = response.result.value {
+                    let jsonObject = JSON(object)
+                    let restJson = jsonObject["rest"].array
+                    self.rests = []
+                    for rest in restJson! {
+                        let restaurant = Restaurant()
+                        restaurant.name = rest["name"].string
+                        restaurant.url = rest["url"].string
+                        restaurant.imageURL = rest["image_url"]["shop_image1"].string
+                        self.rests.append(restaurant)
+                    }
+                    self.tableView.reloadData()
+                }
+        }
     }
     
     /*

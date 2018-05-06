@@ -57,14 +57,17 @@
                             <fontDescription key="fontDescription" type="system" pointSize="14"/>
                             <textInputTraits key="textInputTraits"/>
                         </textField>
-                        <barButtonItem key="rightBarButtonItem" style="plain" id="6CB-5h-Gnu">
-                            <button key="customView" opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" id="kN4-Tc-G9F">
+                        <barButtonItem key="rightBarButtonItem" id="6CB-5h-Gnu">
+                            <button key="customView" opaque="NO" clipsSubviews="YES" contentMode="scaleToFill" enabled="NO" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" id="kN4-Tc-G9F">
                                 <rect key="frame" x="276" y="7" width="83" height="30"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                 <state key="normal" title="検索"/>
+                                <connections>
+                                    <action selector="tapSearchButton:" destination="jpC-a9-MFr" eventType="touchUpInside" id="R4t-ks-w7e"/>
+                                </connections>
                             </button>
                             <connections>
-                                <action selector="tapSearchButton:" destination="jpC-a9-MFr" id="jiE-Kx-N3l"/>
+                                <action selector="tapSearchButton:" destination="jpC-a9-MFr" id="qtm-Ag-HkN"/>
                             </connections>
                         </barButtonItem>
                     </navigationItem>
